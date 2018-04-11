@@ -1,0 +1,9 @@
+<resources>
+    <dimen name="baseline">24dp</dimen>
+    <dimen name="baseline_small">4dp</dimen>
+    <dimen name="baseline_half">8dp</dimen>
+    <dimen name="baseline_dialog">20dp</dimen>
+    <dimen name="baseline_typo">8dp</dimen>
+    <dimen name="baseline_card">8dp</dimen>
+
+</resources>
