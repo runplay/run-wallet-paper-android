@@ -3,6 +3,7 @@
   
 <b>run Iota paper</b> provides a Paper wallet and digital Encrypted Hybrid Master - Slave wallets for IOTA
 <br/><br/>
+<b>Html encrypted digital wallets</b><br/><br/>
 The Master Digital wallet simply provides access to the Seed, Encrypted with SHA-256 and compile to a self contained html file, run anywhere.
 <br/><br/>
 The Slave / View wallet provides ledger access to view the Addresses on the seed, without the need for the Seed, just Addresses, attach them and start receiving IOTA.
@@ -18,7 +19,7 @@ Full of features<br/>
 ✅ <b>Print a Paper wallet</b> 🌿<br/>
 ✅ <b>Create a Digital Paper Master wallet</b> 🌿<br/>
 ✅  <b>Create a Digital Paper View wallet</b> 🌿<br/>
-✅ SHA-256 level encryption<br/>
+✅ SHA-PBKDF2 level encryption<br/>
 ✅ Pre generate as many IOTA Addresses to a Seed as wanted<br/>
 ✅ Secure Delete any files created, cannot be recovered after<br/>
 
@@ -57,9 +58,11 @@ IOTA: 9PPMLVNEGQEZLCKTPDSCMKNKNDPMHUTC9PMOAKHGNGOVVTXOTRA99JFPVAAXHPUM99DGLUHOYL
 <h2>Screens</h2>
 Here are some screenshots of the app
 
-![alt tag](http://iota.runplay.com/img/gp-aws1.png "image")
+![alt tag](http://iota.runplay.com/img/gp-aws1.png "Android Screens")
 
-![alt tag](http://iota.runplay.com/img/gp-aws2.png "image")
+![alt tag](http://iota.runplay.com/img/gp-aws2.png "Android Screens")
 
-![alt tag](http://iota.runplay.com/img/gp-aws3.png "image")
+![alt tag](http://iota.runplay.com/img/gp-aws4.png "Html wallet screens")
+
+![alt tag](http://iota.runplay.com/img/gp-aws3.png "Android Screens")
 
