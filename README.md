@@ -38,6 +38,27 @@ v1.1.030 - Improved View wallet speed, display data and copy data, Added wallet 
 
 <a href="https://play.google.com/store/apps/details?id=run.wallet.paper"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" width="323" height="125"/></a>
 
+<h2>Structure</h2>
+
+```bash
+|app
+|---src
+   |---main
+      |assets
+           |addresses.html (View wallet html template)
+           |paper.html (Seed wallet html template)
+      |java
+           |jota (stripped-down, internet free IOTA jota library for generating addresses, no transaction abilities)
+           |run
+                |wallet
+                     |common/delete (Secure delete file classes)
+                     |paper
+                          |AppService.java (Android Service, used for Address generation and Delete files)
+                          |Main.java (Everything to make the app work, kept in on class for ease of Audit)
+      |res (App resource files)
+      |AndroidMainfest.xml
+```
+
 <h2>How to build</h2>
 
 ```bash
