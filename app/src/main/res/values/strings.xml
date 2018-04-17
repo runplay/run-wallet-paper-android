@@ -18,6 +18,7 @@
     <string name="buttons_ok">OK</string>
     <string name="buttons_cancel">Cancel</string>
     <string name="buttons_clear">Clear</string>
+    <string name="share_text">Latest Address wallet</string>
     <string name="qr_no_edit">QR imported Seeds cannot be Edited</string>
     <string name="do_not">It is not recommended to use the same password as the Paper wallet</string>
     <string name="gen_now">Generating Addresses, you can minimise the app, your device will buzz when complete</string>
@@ -55,7 +56,8 @@
     <string name="print_text">Send direct to printer</string>
     <string name="save">Save</string>
     <string name="save_text">Save plain text to file\n(not recommended)</string>
-    <string name="save_info">Created files will be saved to \nsd:/runIotaPaper/YYYYMMDDHHSS\nNames will be the time of creation.  Always use the Delete functions to Securely remove the files when no longer wanted.</string>
+    <string name="save_info">Created file will be saved to</string>
+    <string name="save_info_end">Always use the Delete functions to Securely remove the files when no longer wanted.</string>
     <string name="gen">Create IOTA Addresses</string>
     <string name="gen_info">Generate as many addresses as you want assigned to this seed</string>
     <string name="btn_gen">Start</string>

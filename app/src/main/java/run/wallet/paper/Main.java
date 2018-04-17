@@ -8,6 +8,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -187,6 +188,9 @@ public class Main extends AppCompatActivity {
 
     private String cameraSeed;
 
+    private TextView saveFilePaper;
+    private TextView saveFileAddresses;
+
 
     private static boolean isLocked=false;
 
@@ -194,7 +198,7 @@ public class Main extends AppCompatActivity {
 
     private static final DecimalFormat df = new DecimalFormat( "#00" );
 
-    protected static final String hdd=Environment.getExternalStorageDirectory().getAbsolutePath()+"/runIotaPaper/";
+    private static final String hdd=Environment.getExternalStorageDirectory().getAbsolutePath()+"/runIotaPaper/";
     private static final int REQUEST_WRITE_STORAGE = 9111;
     private static final Integer[] itemsStart = new Integer[]{0,10,20,30,40,50,100,150,200,250,300,350,400,450,500,600,700,800,900,1000};
     private static final Integer[] itemsTotal = new Integer[]{10,20,30,40,50,100};
@@ -294,7 +298,8 @@ public class Main extends AppCompatActivity {
         noFiles=findViewById(R.id.no_files);
         btnPrint= findViewById(R.id.btn_print);
         btnPaperText=findViewById(R.id.btn_save);
-        //checkEncAddresses=findViewById(R.id.check_enc_addresses);
+        saveFilePaper=findViewById(R.id.save_file_paper);
+        saveFileAddresses=findViewById(R.id.save_file_addresses);
 
         finalSeedAddress=findViewById(R.id.seed_final_addresses);
         getFinalSeedPaper=findViewById(R.id.seed_final_save);
@@ -328,6 +333,7 @@ public class Main extends AppCompatActivity {
                 cameraSeed="";
                 isLocked=false;
                 seedEditText.setText("");
+                seedName.setText("");
                 goScreen(SCR_ONE);
             }
         });
@@ -448,6 +454,22 @@ public class Main extends AppCompatActivity {
                 }
             }
         });
+        seedName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                saveFilePaper.setText(makePaperFileNameDisplay());
+            }
+        });
         seedEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -480,7 +502,7 @@ public class Main extends AppCompatActivity {
     }
 
     @Override
-    public void onResume() {
+    protected void onResume() {
         super.onResume();
         if(dialog!=null) {
             dialog.dismiss();
@@ -489,7 +511,7 @@ public class Main extends AppCompatActivity {
         AppService.setIsAppStarted(true);
     }
     @Override
-    public void onPause() {
+    protected void onPause() {
         super.onPause();
         wipeClipboard();
 
@@ -497,7 +519,7 @@ public class Main extends AppCompatActivity {
 
     }
     @Override
-    public void onDestroy() {
+    protected void onDestroy() {
         wipeClipboard();
         seedEditText=null;
         seedName=null;
@@ -594,6 +616,7 @@ public class Main extends AppCompatActivity {
                 break;
             case SCR_TWO:
                 makeSeedShort();
+                saveFilePaper.setText(makePaperFileNameDisplay());
                 getFinalSeedPaper.setText(makeSeedShort());
                 isLocked=true;
                 break;
@@ -635,6 +658,7 @@ public class Main extends AppCompatActivity {
         } else {
             btnStart.setEnabled(false);
         }
+        saveFileAddresses.setText(makeAddressFileNameDisplay(st,en));
     }
 
     private void drawAddresses() {
@@ -683,6 +707,12 @@ public class Main extends AppCompatActivity {
             noFiles.setVisibility(View.VISIBLE);
             delList.setVisibility(View.GONE);
         }
+    }
+    private static void openInBrowser(File file) {
+        Uri gofile = Uri.parse(file.getAbsolutePath());
+        Intent intent = new Intent(Intent.ACTION_VIEW, gofile);
+        intent.setDataAndType(Uri.fromFile(file), "text/html");
+        activity.startActivity(Intent.createChooser(intent, activity.getResources().getText(R.string.share_text)));
     }
 
     private static class FaList implements ListAdapter {
@@ -734,9 +764,49 @@ public class Main extends AppCompatActivity {
             }
 
             File fn = files.get(i);
+            TextView filename=view.findViewById(R.id.file_name);
+            filename.setText(fn.getName());
 
             TextView tv=view.findViewById(R.id.file_text);
-            tv.setText(fn.getName());
+
+            ImageButton open = view.findViewById(R.id.btn_open);
+            open.setTag(fn);
+            open.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        File f = (File) v.getTag();
+                        if (f != null) {
+                            openInBrowser(f);
+                        }
+                    } catch(Exception e) {}
+                }
+            });
+            ImageButton share = view.findViewById(R.id.btn_share);
+            if(fn.getName().startsWith("add")) {
+                tv.setText(activity.getString(R.string.addresses));
+                share.setTag(fn);
+                share.setVisibility(View.VISIBLE);
+                share.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            File f = (File) v.getTag();
+                            if (f != null) {
+                                share(activity,f);
+                            }
+                        } catch(Exception e) {}
+                    }
+                });
+            } else {
+                if(fn.getName().startsWith("pap")) {
+                    tv.setText(activity.getString(R.string.paper_nav));
+                } else {
+                    tv.setText("");
+                }
+
+                share.setVisibility(View.GONE);
+            }
             ImageButton del = view.findViewById(R.id.btn_file);
             del.setTag(fn.getAbsolutePath());
             del.setOnClickListener(new View.OnClickListener() {
@@ -745,7 +815,6 @@ public class Main extends AppCompatActivity {
                     if(hasFilePermission(activity)) {
                         String fn = (String) view.getTag();
                         if (fn != null) {
-                            Log.e("DELF", fn);
                             AppService.deleteFile(activity, new File(fn));
                         }
                     } else {
@@ -772,6 +841,40 @@ public class Main extends AppCompatActivity {
             return false;
         }
     }
+    private static void share(Context context, File f) {
+        if (f.exists()) {
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
+            shareIntent.setType("text/html");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, context.getResources().getText(R.string.share_text));
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, context.getResources().getText(R.string.share_text));
+            context.startActivity(Intent.createChooser(shareIntent, context.getResources().getText(R.string.share_text)));
+        }
+    }
+    protected static String makeAddressFileName(String datefile, int start, int total) {
+        return hdd+"addresses-"+getName()+"-a"+(start+1)+"-"+(start+total)+"-"+datefile+".html";
+    }
+    protected static String makeAddressFileNameDisplay(int start, int total) {
+        return hdd+"addresses-"+getName()+"-a"+(start+1)+"-a"+(start+total)+(isNameEmpty()?"-YYYY-MM-DD-HHMM.html":"");
+    }
+    protected static String makePaperFileName(String datefile) {
+        return hdd+"paper-"+getName()+"-"+datefile+".html";
+    }
+    protected static String makePaperFileNameDisplay() {
+        return hdd+"paper-"+getName()+(isNameEmpty()?"-YYYY-MM-DD-HHMM.html":"");
+    }
+    private static boolean isNameEmpty() {
+        return seedName.getText().toString().isEmpty();
+    }
+    private static String getName() {
+        String name=seedName.getText().toString();
+        if(name==null || name.isEmpty()) {
+            name=getFileDateYYYYMMDDHHMMSS();
+        }
+        return name;
+    }
+
     /*
     Seed generate methods
      */
@@ -832,7 +935,7 @@ public class Main extends AppCompatActivity {
     private static SecretKey generateKey(String salt, String passphrase) {
         try {
             SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-            KeySpec spec = new PBEKeySpec(passphrase.toCharArray(), hex(salt), 1000, 256);
+            KeySpec spec = new PBEKeySpec(passphrase.toCharArray(), hex(salt), 10000, 256);
             SecretKey key = new SecretKeySpec(factory.generateSecret(spec).getEncoded(), "AES");
             return key;
         }
@@ -924,7 +1027,6 @@ public class Main extends AppCompatActivity {
 
             if(unit!=IotaUnits.IOTA) {
                 String result=createAmountDisplayText(amountInDisplayUnit, unit, true);
-                //Log.e("RES",""+result);
                 data.thirdDecimal=result.substring(result.length()-1,result.length());
             }
             data.value = createAmountDisplayText(amountInDisplayUnit, unit, false);
@@ -1009,20 +1111,6 @@ public class Main extends AppCompatActivity {
         return null;
     }
 
-    private static String getSeed(String seed) {
-
-        seed = seed.toUpperCase();
-
-        if (seed.length() > SEED_LENGTH_MAX)
-            seed = seed.substring(0, SEED_LENGTH_MAX);
-
-        seed = seed.replaceAll("[^A-Z9]", "9");
-
-        seed = StringUtils.rightPad(seed, SEED_LENGTH_MAX, '9');
-
-        return seed;
-    }
-
 
 
     /*
@@ -1080,7 +1168,7 @@ public class Main extends AppCompatActivity {
             pack.encrypted=Base64.encodeToString(cipher.doFinal(clean),Base64.DEFAULT);
             return pack;
         }
-        public static void generateDigitalPaper(final String password, final Activity activity){
+        protected static void generateDigitalPaper(final String password, final Activity activity){
             if(seedEditText.getText().toString().trim().isEmpty()){
                 return;
             }
@@ -1127,7 +1215,7 @@ public class Main extends AppCompatActivity {
                             .replace("$NAME",name);
 
                     name=name.replaceAll(" ","");
-                    String file=hdd+"paper-"+name+datefile+".html";
+                    String file=makePaperFileName(datefile);//hdd+"paper-"+name+datefile+".html";
                     writeToFile(file,htmlContent);
                     pack=null;
                     Snackbar.make(container,R.string.gen_paper_done+" "+file,Snackbar.LENGTH_LONG).show();
@@ -1159,7 +1247,7 @@ public class Main extends AppCompatActivity {
                 rand=max;
             return rand;
         }
-        public static void generateImage(final JSONObject qrjson, final Activity activity, final boolean withQR, final BmpCallback callback){
+        protected static void generateImage(final JSONObject qrjson, final Activity activity, final boolean withQR, final BmpCallback callback){
 
             if(qrjson==null){
                 return;
@@ -1172,7 +1260,7 @@ public class Main extends AppCompatActivity {
             }).start();
         }
 
-        public static Bitmap generateImage(final JSONObject qrjson, final Activity activity, boolean withQR){
+        protected static Bitmap generateImage(final JSONObject qrjson, final Activity activity, boolean withQR){
             if(qrjson==null){
                 return null;
             }
@@ -1299,7 +1387,7 @@ public class Main extends AppCompatActivity {
         int minutes = gc.get(GregorianCalendar.MINUTE);
         return year + "-" + df.format(month) + "-"+ df.format(day) + "-" +df.format(hour)+"h"+df.format(minutes)+"m";
     }
-    public static String getDisplayDate()  {
+    protected static String getDisplayDate()  {
         GregorianCalendar gc = new GregorianCalendar();
         int day = gc.get(GregorianCalendar.DAY_OF_MONTH);
         int month = gc.get(GregorianCalendar.MONTH)+1;
@@ -1314,8 +1402,7 @@ public class Main extends AppCompatActivity {
     FILE PERMISSIONS
      */
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.e("result",""+resultCode+" -- "+requestCode);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (resultCode) {
 
             case REQUEST_WRITE_STORAGE:
@@ -1430,7 +1517,7 @@ public class Main extends AppCompatActivity {
                         datefile="";
                     }
 
-                    AppService.generateAddressTask(name,datefile,password,seedEditText.getText().toString(),st,en-st);
+                    AppService.generateAddressTask(name,datefile,password,seedEditText.getText().toString(),st,en);
                 }
 
                 alertDialog.hide();
@@ -1441,7 +1528,7 @@ public class Main extends AppCompatActivity {
         }
 
     }
-    private static void setKeyboard(Activity activity, View editTextView, boolean showKeyboard) {
+    protected static void setKeyboard(Activity activity, View editTextView, boolean showKeyboard) {
         editTextView.requestFocus();
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         if(imm!=null) {

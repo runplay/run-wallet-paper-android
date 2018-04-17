@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
@@ -151,14 +152,19 @@ public final class AppService extends Service {
         protected Boolean doInBackground(Boolean... booleans) {
 
             SecureDeleteFile.delete(deleteMe);
+
             return null;
         }
         @Override
         protected void onPostExecute(Boolean result) {
             if(isAppStarted) {
+
                 Snackbar.make(activity.findViewById(R.id.container),activity.getString(R.string.deleted)+deleteMe.getName(),Snackbar.LENGTH_SHORT).show();
                 Main.refreshFiles();
             }
+            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            intent.setData(Uri.fromFile(deleteMe));
+            activity.sendBroadcast(intent);
         }
 
     }
@@ -166,18 +172,15 @@ public final class AppService extends Service {
     private static double pctCompleted=0;
     private static GoAddressTask gat;
     public static void generateAddressTask(String name,String datefile, String password, String seed, int indexStart, int total) {
-        if(gat==null) {
-            SERVICE.ensureForegroundService();
-            gat = new GoAddressTask();
-            gat.startIndex=indexStart;
-            gat.password=password;
-            gat.name=name;
-            gat.total=total;
-            gat.seed=seed;
-            gat.datefile=datefile;
-            gat.execute(true);
-        }
-
+        SERVICE.ensureForegroundService();
+        gat = new GoAddressTask();
+        gat.startIndex=indexStart;
+        gat.password=password;
+        gat.name=name;
+        gat.total=total;
+        gat.seed=seed;
+        gat.datefile=datefile;
+        gat.execute(true);
     }
     private static class GoAddressTask extends AsyncTask<Boolean,Void,Boolean> {
 
@@ -194,6 +197,7 @@ public final class AppService extends Service {
 
             try {
                 GetNewAddressResponse addresp = getNewAddress(seed, 2, startIndex, false, total);
+                String file=Main.makeAddressFileName(datefile,startIndex,total);
                 seed=null;
                 int pctcount=0;
                 JSONArray jar=new JSONArray();
@@ -221,7 +225,7 @@ public final class AppService extends Service {
                         .replace("$NAME",name)
                         .replace("$ENC","true");
                 name=name.replaceAll(" ","");
-                String file=Main.hdd+"addresses-"+name+datefile+".html";
+
                 Main.writeToFile(file,htmlContent);
 
                 return true;
