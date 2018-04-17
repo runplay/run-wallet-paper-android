@@ -30,6 +30,7 @@ https://github.com/iotaledger/android-wallet-paper-android
 <h2>Updates</h2>
 
 v1.1.021 - First release<br/>
+v1.1.030 - Improved View wallet speed, display data and copy data, Added wallet view and share button to files section, Other misc. fixes and tweaks
 <br/><br/>
 
 <br/><br/>
