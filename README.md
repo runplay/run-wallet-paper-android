@@ -1,16 +1,16 @@
 # run IOTA paper
 ![alt tag](http://iota.runplay.com/img/paper-logo.png "run IOTA wallet Logo")
   
-<b>run Iota paper</b> provides a Paper wallet and digital Encrypted Hybrid Master - Slave wallets for IOTA
+<b>run Iota paper</b> provides a Paper wallet and digital encrypted Hybrid Master Slave wallets for IOTA
 <br/><br/>
 <b>Html encrypted digital wallets</b><br/><br/>
-The Master Digital wallet simply provides access to the Seed, Encrypted with SHA-256 and compile to a self contained html file, run anywhere.
+The Master Digital wallet simply provides access to the Seed, encrypted with SHA-256 and compiled to a self contained html file, run anywhere.
 <br/><br/>
-The Slave / View wallet provides ledger access to view the Addresses on the seed, without the need for the Seed, just Addresses, attach them and start receiving IOTA.
+The Slave / View wallet provides ledger access to view the Addresses on the seed, without the need for the Seed, encrypted with SHA-256, attach them and start receiving IOTA.
 <br/><br/>
-A simple use case scenario, a boss generates Master and Slave wallets, keeps master (Seed) and gives Slave (Viewer) wallets to Accounts and Sales departments safe in the knowledge that the Seed is never given out.
+A simple use case scenario: Boss generates Master and Slave wallets, keeps master (Seed) and gives Slave (Viewer) wallets to Accounts and Sales departments safe in the knowledge that the Seed is never given out, but both departments get full view access to the transactions.
 <br/><br/>
-There are no spend function with run IOTA paper, it is designed to only receive IOTA payments, with separation between Seed owner and people (staff) with permission to view the transfer on the Seed.
+There are no spend functions with run IOTA paper, it is designed to only receive IOTA payments, with separation between Seed owner and people (staff) with permission to view the transfer on the Seed.
 <br/><br/>
 <h2>Features</h2>
 
@@ -28,7 +28,7 @@ https://github.com/iotaledger/android-wallet-paper-android
 <br/>
 <br/>
 <h2>Updates</h2>
-
+v1.2.030 - Add Trinity wallet compatibility on QR, bug fix on Files area app crash
 v1.1.021 - First release<br/>
 v1.1.030 - Improved View wallet speed, display data and copy data, Added wallet view and share button to files section, Other misc. fixes and tweaks
 <br/><br/>
@@ -39,24 +39,24 @@ v1.1.030 - Improved View wallet speed, display data and copy data, Added wallet 
 <a href="https://play.google.com/store/apps/details?id=run.wallet.paper"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" width="323" height="125"/></a>
 
 <h2>Structure</h2>
-
+The app has been kept to a minimalist structure to enable ease of Audit.<br/>
 ```bash
 |app
-|---src
-   |---main
-      |assets
-           |addresses.html (View wallet html template)
-           |paper.html (Seed wallet html template)
-      |java
-           |jota (stripped-down, internet free IOTA jota library for generating addresses, no transaction abilities)
-           |run
-                |wallet
-                     |common/delete (Secure delete file classes)
-                     |paper
-                          |AppService.java (Android Service, used for Address generation and Delete files)
-                          |Main.java (Everything to make the app work, kept in on class for ease of Audit)
-      |res (App resource files)
-      |AndroidMainfest.xml
+   |src
+       |main
+           |assets
+           |    |addresses.html (View wallet html template)
+           |    |paper.html (Seed wallet html template)
+           |java
+           |    |jota (stripped-down, internet free IOTA jota library for generating addresses, no transaction abilities)
+           |    |run
+           |         |wallet
+           |              |common/delete (Secure delete file classes)
+           |              |paper
+           |                   |AppService.java (Android Service, used for Address generation and Delete files)
+           |                   |Main.java (Everything to make the app work, kept in one class for ease of Audit)
+           |res (App resource files)
+           |AndroidMainfest.xml
 ```
 
 <h2>How to build</h2>
@@ -67,7 +67,7 @@ $ cd run-wallet-paper-android
 $ ./gradlew clean build
 ```
 
-Available only on Github and Google Play, do not download run IOTA paper anywhere else
+Available only on Github, Google Play and Amazon market, do not download run IOTA paper anywhere else
 
 
 <h2>Support the project</h2>

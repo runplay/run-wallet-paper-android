@@ -304,7 +304,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="vertical">
                     <TextView
@@ -320,6 +320,15 @@
                         android:alpha="0.5"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:checked="true"
+                        />
+                    <CheckBox
+                        android:id="@+id/check_trinity"
+                        android:text="@string/print_trinity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:alpha="0.5"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:checked="false"
                         />
                 </LinearLayout>
                 <Button

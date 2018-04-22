@@ -22,7 +22,7 @@
     <string name="qr_no_edit">QR imported Seeds cannot be Edited</string>
     <string name="do_not">It is not recommended to use the same password as the Paper wallet</string>
     <string name="gen_now">Generating Addresses, you can minimise the app, your device will buzz when complete</string>
-
+    <string name="print_trinity">Trinity wallet compatible</string>
     <string name="no_seed_data">No seed data found</string>
 
     <string name="gen_paper">Generating Digital Paper</string>

@@ -158,6 +158,7 @@ public class Main extends AppCompatActivity {
 
     private static CheckBox checkDigital;
     private static CheckBox checkPrint;
+    private static CheckBox checkTrinity;
     private ListView delList;
 
     private Button btnPaper;
@@ -280,6 +281,7 @@ public class Main extends AppCompatActivity {
 
         checkDigital=findViewById(R.id.check_digital);
         checkPrint=findViewById(R.id.check_print);
+        checkTrinity=findViewById(R.id.check_trinity);
         btnQr=findViewById(R.id.btn_qr);
 
         addGenNow=findViewById(R.id.address_gen_now);
@@ -698,11 +700,16 @@ public class Main extends AppCompatActivity {
 
     }
     private void drawFileList() {
-        if(hasFilePermission(activity) && !getFiles().isEmpty()) {
-            FaList fa = new FaList();
-            delList.setAdapter(fa);
-            noFiles.setVisibility(View.GONE);
-            delList.setVisibility(View.VISIBLE);
+        if(hasFilePermission(activity)) {
+            if(!getFiles().isEmpty()) {
+                FaList fa = new FaList();
+                delList.setAdapter(fa);
+                noFiles.setVisibility(View.GONE);
+                delList.setVisibility(View.VISIBLE);
+            } else {
+                noFiles.setVisibility(View.VISIBLE);
+                delList.setVisibility(View.GONE);
+            }
         } else {
             noFiles.setVisibility(View.VISIBLE);
             delList.setVisibility(View.GONE);
@@ -1000,6 +1007,7 @@ public class Main extends AppCompatActivity {
             return value;
         }
     }
+    /*
     private static class IotaToText {
         public static long convertUnits(long amount, IotaUnits fromUnit, IotaUnits toUnit) {
             long amountInSource = (long) (amount * Math.pow(10, fromUnit.getValue()));
@@ -1078,7 +1086,7 @@ public class Main extends AppCompatActivity {
         }
 
     }
-
+*/
 
     /*
     IOTA Address Generation methods
@@ -1267,12 +1275,18 @@ public class Main extends AppCompatActivity {
             int size = 390;
             int fixed = 200;
             int sizeM=230;
+
+            String qrStr=qrjson.toString();
+            if(checkTrinity.isChecked()) {
+                qrStr=qrjson.optString("seed");
+            }
+
             Map<EncodeHintType, Object> hintMap = new EnumMap<>(EncodeHintType.class);
             hintMap.put(EncodeHintType.CHARACTER_SET, "UTF-8");
             hintMap.put(EncodeHintType.MARGIN, 1);
             QRCodeWriter qrCodeWriter = new QRCodeWriter();
             try {
-                BitMatrix byteMatrix = qrCodeWriter.encode(qrjson.toString(), BarcodeFormat.QR_CODE, size,
+                BitMatrix byteMatrix = qrCodeWriter.encode(qrStr, BarcodeFormat.QR_CODE, size,
                         size, hintMap);
                 int height = byteMatrix.getHeight();
                 int width = byteMatrix.getWidth();
@@ -1636,7 +1650,7 @@ public class Main extends AppCompatActivity {
                 try {
                     res=new JSONObject(strRes);
                 } catch (Exception e) {
-                    Log.e("JSON","ex: "+e.getMessage());
+                    //Log.e("JSON","ex: "+e.getMessage());
                 }
                 if(res!=null) {
                     String smsg=isSeedValid(activity,res.optString("seed"));
