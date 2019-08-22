@@ -1,6 +1,14 @@
 # run IOTA paper
 ![alt tag](http://iota.runplay.com/img/paper-logo.png "run IOTA wallet Logo")
   
+
+```
+
+WARNING !
+This repository is now out of date a no longer worked on, only use for reference, an update to the latest IOTA library is required for it to work
+
+```
+
 <b>run Iota paper</b> provides a Paper wallet and digital encrypted Hybrid Master Slave wallets for IOTA
 <br/><br/>
 <b>Html encrypted digital wallets</b><br/><br/>
@@ -28,9 +36,9 @@ https://github.com/iotaledger/android-wallet-paper-android
 <br/>
 <br/>
 <h2>Updates</h2>
-v1.2.030 - Add Trinity wallet compatibility on QR, bug fix on Files area app crash
+v1.2.030 - Add Trinity wallet compatibility on QR, bug fix on Files area app crash<br/>
+v1.1.030 - Improved View wallet speed, display data and copy data, Added wallet view and share button to files section, Other misc. fixes and tweaks<br/>
 v1.1.021 - First release<br/>
-v1.1.030 - Improved View wallet speed, display data and copy data, Added wallet view and share button to files section, Other misc. fixes and tweaks
 <br/><br/>
 
 <br/><br/>
@@ -40,7 +48,8 @@ v1.1.030 - Improved View wallet speed, display data and copy data, Added wallet 
 
 <h2>Structure</h2>
 The app has been kept to a minimalist structure to enable ease of Audit.<br/>
-```bash
+<br/>
+```
 |app
    |src
        |main
